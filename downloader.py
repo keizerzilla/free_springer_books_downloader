@@ -1,3 +1,4 @@
+import os
 import requests
 import pandas as pd
 
@@ -12,8 +13,13 @@ for index, row in df.iterrows():
     doi2 = split[-2]
     dl_url = base_dl_url + doi2 + "/" + doi1 + ".pdf"
     filename = row["Book Title"] + ".pdf"
+    filename = filename.replace("/", "-")
+    if os.path.exists(filename):
+        print("{} FILE ALREADY DOWNLOADED".format(filename))
+        continue
     print("Downloading \"{}\"...".format(row["Book Title"]))
     response = requests.get(dl_url)
     with open(filename, "wb") as dump:
         dump.write(response.content)
     print("Done!")
+
